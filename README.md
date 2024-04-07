@@ -20,9 +20,9 @@ The Social-Network-API is a backend application designed to power social network
 
 ## Installation
 
-1. `git clone` the repository to your local machine
+1. `git clone` the repository
 2. In your root directory run `npm install` to install dependencies
-3. Ensure MongoDB is installed and running on your local machine
+3. Ensure MongoDB is installed and running
 4. Create a .env file in the root directory and set variables accordingly
 5. Start the server using `npm start`
 
