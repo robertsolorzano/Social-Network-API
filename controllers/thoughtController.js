@@ -11,7 +11,7 @@ const getAllThoughts = async (req, res) => {
 
 const getThoughtById = async (req, res) => {
   try {
-    const thought = await Thought.findOne({ _id: req.params.thoughtId });
+    const thought = await Thought.findOne({ _id: req.params.id });
     if (!thought) {
       return res.status(404).json({ message: 'No thought with this id!' });
     }
@@ -41,7 +41,7 @@ const createThought = async (req, res) => {
 const updateThought = async (req, res) => {
   try {
     const thought = await Thought.findOneAndUpdate(
-      { _id: req.params.thoughtId },
+      { _id: req.params.id },
       { $set: req.body },
       { runValidators: true, new: true }
     );
@@ -56,28 +56,21 @@ const updateThought = async (req, res) => {
 
 const deleteThought = async (req, res) => {
   try {
-    const thought = await Thought.findOneAndRemove({ _id: req.params.thoughtId });
+    const thought = await Thought.findOneAndDelete({ _id: req.params.id });
     if (!thought) {
       return res.status(404).json({ message: 'No thought with this id!' });
     }
-    const user = await User.findOneAndUpdate(
-      { thoughts: req.params.thoughtId },
-      { $pull: { thoughts: req.params.thoughtId } },
-      { new: true }
-    );
-    if (!user) {
-      return res.status(404).json({ message: 'Thought deleted but no user with this id!' });
-    }
     res.json({ message: 'Thought successfully deleted!' });
   } catch (err) {
-    res.status(500).json(err);
+    console.error("Error details:", err); // Enhanced logging for debugging.
+    res.status(500).json({ message: 'Internal server error', error: err.message });
   }
 };
 
 const addReaction = async (req, res) => {
   try {
     const thought = await Thought.findOneAndUpdate(
-      { _id: req.params.thoughtId },
+      { _id: req.params.id },
       { $addToSet: { reactions: req.body } },
       { runValidators: true, new: true }
     );
@@ -93,7 +86,7 @@ const addReaction = async (req, res) => {
 const removeReaction = async (req, res) => {
   try {
     const thought = await Thought.findOneAndUpdate(
-      { _id: req.params.thoughtId },
+      { _id: req.params.id },
       { $pull: { reactions: { reactionId: req.params.reactionId } } },
       { runValidators: true, new: true }
     );

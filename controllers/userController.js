@@ -11,7 +11,7 @@ const getAllUsers = async (req, res) => {
 
 const getUserById = async (req, res) => {
   try {
-    const user = await User.findOne({ _id: req.params.userId })
+    const user = await User.findOne({ _id: req.params.id })
       .populate('thoughts')
       .populate('friends');
     if (!user) {
@@ -35,7 +35,7 @@ const createUser = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const user = await User.findOneAndUpdate(
-      { _id: req.params.userId },
+      { _id: req.params.id },
       { $set: req.body },
       { runValidators: true, new: true }
     );
@@ -50,7 +50,7 @@ const updateUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
   try {
-    const user = await User.findOneAndDelete({ _id: req.params.userId });
+    const user = await User.findOneAndDelete({ _id: req.params.id });
     if (!user) {
       return res.status(404).json({ message: 'No user with this id!' });
     }
@@ -64,7 +64,7 @@ const deleteUser = async (req, res) => {
 const addFriend = async (req, res) => {
   try {
     const user = await User.findOneAndUpdate(
-      { _id: req.params.userId },
+      { _id: req.params.id },
       { $addToSet: { friends: req.params.friendId } },
       { new: true }
     ).populate('friends');
@@ -80,7 +80,7 @@ const addFriend = async (req, res) => {
 const removeFriend = async (req, res) => {
   try {
     const user = await User.findOneAndUpdate(
-      { _id: req.params.userId },
+      { _id: req.params.id },
       { $pull: { friends: req.params.friendId } },
       { new: true }
     ).populate('friends');
